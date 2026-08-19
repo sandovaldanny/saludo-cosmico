@@ -20,19 +20,46 @@ const CATEGORIES = [
     unlocked: true,
     program: "Una vida maravillosa",
     phrases: [
-      "Soy una buena persona.",
-      "Amo mi vida.",
-      "Mi vida tiene dirección y significado.",
-      "Hoy será un gran día.",
-      "Confío en mí.",
-      "Tengo energía para avanzar.",
-      "Disfruto construir mi mejor versión.",
-      "Agradezco todo lo bueno que llega a mi vida.",
-      "Estoy creando una vida maravillosa.",
-      "Cada día crezco y mejoro.",
+      { icon: "🤍", text: "Soy una buena persona." },
+      { icon: "🌈", text: "Amo mi vida." },
+      { icon: "🧭", text: "Mi vida tiene dirección y significado." },
+      { icon: "🌅", text: "Hoy será un gran día." },
+      { icon: "🦁", text: "Confío en mí." },
+      { icon: "🚀", text: "Tengo energía para avanzar." },
+      { icon: "🪞", text: "Disfruto construir mi mejor versión." },
+      { icon: "🙏", text: "Agradezco todo lo bueno que llega a mi vida." },
+      { icon: "🌌", text: "Estoy creando una vida maravillosa." },
+      { icon: "🌱", text: "Cada día crezco y mejoro." },
     ],
   },
-  { id: "salud", name: "Salud", unlocked: false },
+  {
+    id: "salud",
+    name: "Salud",
+    unlocked: true,
+    program: "Vitalidad radiante",
+    phrases: [
+      { icon: "⚡", text: "Mi cuerpo despierta con una fuerza que no se apaga." },
+      { icon: "🌬️", text: "Cada inhalación limpia mi ser. Cada exhalación me libera." },
+      { icon: "☀️", text: "La vida corre por mí con un fuego claro y constante." },
+      { icon: "🌙", text: "Mi descanso reconstruye cada fibra de mi ser." },
+      { icon: "❤️", text: "Mi corazón late con poder, calma y precisión." },
+      { icon: "✨", text: "Cada célula mía elige sanar, brillar y vivir." },
+      { icon: "🏃", text: "Me muevo con ligereza, fuerza y libertad." },
+      { icon: "🧠", text: "Mi mente está nítida y mi sistema nervioso en paz." },
+      { icon: "🌿", text: "La salud es mi terreno natural. Florezco desde adentro." },
+      { icon: "🛡️", text: "Mi defensa interior es lúcida, rápida y poderosa." },
+      { icon: "🥗", text: "Lo que entra a mi cuerpo se convierte en vitalidad." },
+      { icon: "💧", text: "Mi sangre lleva vida fresca a cada rincón de mí." },
+      { icon: "🕊️", text: "Suelto el peso del cuerpo. La paz ocupa su lugar." },
+      { icon: "🔥", text: "Tengo una reserva inmensa de energía para vivir en grande." },
+      { icon: "💪", text: "Mis huesos, músculos y columna me sostienen con dignidad." },
+      { icon: "🌸", text: "Honro mi cuerpo. Mi piel, mi aliento y mi pulso están vivos." },
+      { icon: "💦", text: "Me hidrato y despierto una claridad física inmediata." },
+      { icon: "🫁", text: "Mis pulmones se expanden. Hay espacio, oxígeno y poder." },
+      { icon: "🛌", text: "El descanso me repara a un nivel profundo y silencioso." },
+      { icon: "🌟", text: "Ahora mismo estoy en plena salud, con fuerza y vitalidad." },
+    ],
+  },
   { id: "amor", name: "Amor y pareja", unlocked: false },
   { id: "familia", name: "Familia y amigos", unlocked: false },
   { id: "carrera", name: "Carrera y propósito", unlocked: false },
@@ -56,6 +83,7 @@ const practice = document.querySelector("#practice");
 const practiceKicker = document.querySelector("#practice-kicker");
 const practiceTitle = document.querySelector("#practice-title");
 const practiceProgress = document.querySelector("#practice-progress");
+const phraseIcon = document.querySelector("#phrase-icon");
 const affirmation = document.querySelector("#affirmation");
 const prevPhrase = document.querySelector("#prev-phrase");
 const nextPhrase = document.querySelector("#next-phrase");
@@ -116,7 +144,7 @@ function showGreeting(name) {
   greeting.hidden = false;
   auren.hidden = false;
   practice.hidden = true;
-  aurenLede.textContent = `${name}, esta prueba abre Autocrecimiento. El resto llega pronto.`;
+  aurenLede.textContent = `${name}, Autocrecimiento y Salud ya están abiertos. El resto llega pronto.`;
   replay(greeting);
   replay(auren);
   greeting.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -140,14 +168,17 @@ function renderAffirmation() {
 
   if (finished) {
     practiceProgress.textContent = "Completado";
-    affirmation.textContent = `${currentName}, ya afirmaste tu vida maravillosa.`;
+    phraseIcon.textContent = "🌟";
+    affirmation.textContent = `${currentName}, completaste ${activeCategory.program}.`;
     prevPhrase.disabled = false;
     nextPhrase.textContent = "Repetir";
     return;
   }
 
   practiceProgress.textContent = `${phraseIndex + 1} / ${total}`;
-  affirmation.textContent = current;
+  phraseIcon.textContent = current.icon;
+  affirmation.textContent = current.text;
+  replay(phraseIcon);
   prevPhrase.disabled = phraseIndex === 0;
   nextPhrase.textContent = phraseIndex === total - 1 ? "Cerrar" : "Siguiente";
 }
