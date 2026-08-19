@@ -13,6 +13,35 @@ const PHRASES = [
   "El cosmos sonríe. Tú acabas de entrar.",
 ];
 
+const CATEGORIES = [
+  {
+    id: "autocrecimiento",
+    name: "Autocrecimiento",
+    unlocked: true,
+    program: "Una vida maravillosa",
+    phrases: [
+      "Soy una buena persona.",
+      "Amo mi vida.",
+      "Mi vida tiene dirección y significado.",
+      "Hoy será un gran día.",
+      "Confío en mí.",
+      "Tengo energía para avanzar.",
+      "Disfruto construir mi mejor versión.",
+      "Agradezco todo lo bueno que llega a mi vida.",
+      "Estoy creando una vida maravillosa.",
+      "Cada día crezco y mejoro.",
+    ],
+  },
+  { id: "salud", name: "Salud", unlocked: false },
+  { id: "amor", name: "Amor y pareja", unlocked: false },
+  { id: "familia", name: "Familia y amigos", unlocked: false },
+  { id: "carrera", name: "Carrera y propósito", unlocked: false },
+  { id: "finanzas", name: "Finanzas", unlocked: false },
+  { id: "diversion", name: "Diversión y recreación", unlocked: false },
+  { id: "entorno", name: "Entorno físico", unlocked: false },
+];
+
+const welcome = document.querySelector("#welcome");
 const form = document.querySelector("#greet-form");
 const greeting = document.querySelector("#greeting");
 const hello = document.querySelector("#hello");
@@ -20,9 +49,22 @@ const phrase = document.querySelector("#phrase");
 const nameInput = document.querySelector("#name");
 const again = document.querySelector("#again");
 const reset = document.querySelector("#reset");
+const auren = document.querySelector("#auren");
+const aurenLede = document.querySelector("#auren-lede");
+const categoriesEl = document.querySelector("#categories");
+const practice = document.querySelector("#practice");
+const practiceKicker = document.querySelector("#practice-kicker");
+const practiceTitle = document.querySelector("#practice-title");
+const practiceProgress = document.querySelector("#practice-progress");
+const affirmation = document.querySelector("#affirmation");
+const prevPhrase = document.querySelector("#prev-phrase");
+const nextPhrase = document.querySelector("#next-phrase");
+const backAuren = document.querySelector("#back-auren");
 
 let currentName = "";
 let lastPhrase = "";
+let activeCategory = null;
+let phraseIndex = 0;
 
 function pickPhrase() {
   let next = lastPhrase;
@@ -33,22 +75,81 @@ function pickPhrase() {
   return next;
 }
 
-function showGreeting(name) {
-  currentName = name;
-  hello.innerHTML = `Hola, <span>${escapeHtml(name)}</span>`;
-  phrase.textContent = pickPhrase();
-  greeting.hidden = false;
-  greeting.style.animation = "none";
-  greeting.offsetHeight;
-  greeting.style.animation = "";
-}
-
 function escapeHtml(value) {
   return value
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
+}
+
+function replay(el) {
+  el.style.animation = "none";
+  el.offsetHeight;
+  el.style.animation = "";
+}
+
+function renderCategories() {
+  categoriesEl.innerHTML = CATEGORIES.map((category) => {
+    if (category.unlocked) {
+      return `
+        <button type="button" class="card open" data-id="${category.id}">
+          <p class="card-name">${escapeHtml(category.name)}</p>
+          <p class="card-meta">${escapeHtml(category.program)}</p>
+        </button>
+      `;
+    }
+    return `
+      <div class="card locked" aria-disabled="true">
+        <p class="card-name">${escapeHtml(category.name)}</p>
+        <p class="card-meta">Próximamente</p>
+      </div>
+    `;
+  }).join("");
+}
+
+function showGreeting(name) {
+  currentName = name;
+  hello.innerHTML = `Hola, <span>${escapeHtml(name)}</span>`;
+  phrase.textContent = pickPhrase();
+  welcome.hidden = true;
+  greeting.hidden = false;
+  auren.hidden = false;
+  practice.hidden = true;
+  aurenLede.textContent = `${name}, esta prueba abre Autocrecimiento. El resto llega pronto.`;
+  replay(greeting);
+  replay(auren);
+  greeting.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function openPractice(category) {
+  activeCategory = category;
+  phraseIndex = 0;
+  practiceKicker.textContent = category.name;
+  practiceTitle.textContent = category.program;
+  auren.hidden = true;
+  practice.hidden = false;
+  renderAffirmation();
+  replay(practice);
+}
+
+function renderAffirmation() {
+  const total = activeCategory.phrases.length;
+  const current = activeCategory.phrases[phraseIndex];
+  const finished = phraseIndex >= total;
+
+  if (finished) {
+    practiceProgress.textContent = "Completado";
+    affirmation.textContent = `${currentName}, ya afirmaste tu vida maravillosa.`;
+    prevPhrase.disabled = false;
+    nextPhrase.textContent = "Repetir";
+    return;
+  }
+
+  practiceProgress.textContent = `${phraseIndex + 1} / ${total}`;
+  affirmation.textContent = current;
+  prevPhrase.disabled = phraseIndex === 0;
+  nextPhrase.textContent = phraseIndex === total - 1 ? "Cerrar" : "Siguiente";
 }
 
 form.addEventListener("submit", (event) => {
@@ -60,14 +161,52 @@ form.addEventListener("submit", (event) => {
 
 again.addEventListener("click", () => {
   if (!currentName) return;
-  showGreeting(currentName);
+  phrase.textContent = pickPhrase();
+  replay(greeting);
 });
 
 reset.addEventListener("click", () => {
+  currentName = "";
+  activeCategory = null;
   greeting.hidden = true;
+  auren.hidden = true;
+  practice.hidden = true;
+  welcome.hidden = false;
   nameInput.focus();
   nameInput.select();
 });
+
+categoriesEl.addEventListener("click", (event) => {
+  const card = event.target.closest(".card.open");
+  if (!card) return;
+  const category = CATEGORIES.find((item) => item.id === card.dataset.id);
+  if (category?.unlocked) openPractice(category);
+});
+
+prevPhrase.addEventListener("click", () => {
+  if (!activeCategory) return;
+  phraseIndex = Math.max(0, Math.min(phraseIndex, activeCategory.phrases.length) - 1);
+  renderAffirmation();
+});
+
+nextPhrase.addEventListener("click", () => {
+  if (!activeCategory) return;
+  if (phraseIndex >= activeCategory.phrases.length) {
+    phraseIndex = 0;
+    renderAffirmation();
+    return;
+  }
+  phraseIndex += 1;
+  renderAffirmation();
+});
+
+backAuren.addEventListener("click", () => {
+  practice.hidden = true;
+  auren.hidden = false;
+  replay(auren);
+});
+
+renderCategories();
 
 const canvas = document.querySelector("#stars");
 const ctx = canvas.getContext("2d");

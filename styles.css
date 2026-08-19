@@ -60,9 +60,9 @@ body {
 .stage {
   position: relative;
   z-index: 3;
-  max-width: 860px;
+  max-width: 960px;
   margin: 0 auto;
-  padding: 12vh 24px 8vh;
+  padding: 10vh 24px 8vh;
   text-align: center;
 }
 
@@ -74,8 +74,9 @@ body {
   margin: 0 0 16px;
 }
 
-.title {
-  font-size: clamp(2.6rem, 8vw, 5.4rem);
+.title,
+.section-title {
+  font-size: clamp(2.2rem, 7vw, 5rem);
   line-height: 0.92;
   margin: 0 0 18px;
   text-wrap: balance;
@@ -83,6 +84,10 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+.section-title {
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
 }
 
 .lede {
@@ -94,7 +99,8 @@ body {
 }
 
 .panel,
-.greeting {
+.greeting,
+.practice {
   background: var(--glass);
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 28px;
@@ -162,6 +168,13 @@ button.ghost {
   background: transparent;
   color: var(--ink);
   outline: 1px solid rgba(255, 255, 255, 0.28);
+  animation: none;
+}
+
+button:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  animation: none;
 }
 
 .hint {
@@ -171,7 +184,9 @@ button.ghost {
   font-family: Fraunces, serif;
 }
 
-.greeting {
+.greeting,
+.auren,
+.practice {
   margin-top: 28px;
   animation: rise 0.7s ease;
 }
@@ -189,7 +204,8 @@ button.ghost {
   color: transparent;
 }
 
-.phrase {
+.phrase,
+.affirmation {
   font-family: Fraunces, serif;
   font-style: italic;
   font-size: clamp(1.2rem, 3vw, 1.8rem);
@@ -198,11 +214,82 @@ button.ghost {
   max-width: 34rem;
 }
 
+.affirmation {
+  min-height: 4.8rem;
+  font-size: clamp(1.4rem, 4vw, 2.1rem);
+}
+
 .actions {
   display: flex;
   justify-content: center;
   gap: 12px;
   flex-wrap: wrap;
+}
+
+.categories {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 700;
+  animation: none;
+  border-radius: 22px;
+  padding: 18px 18px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(8, 4, 22, 0.55);
+  color: var(--ink);
+  min-height: 132px;
+}
+
+.card.open {
+  cursor: pointer;
+  background:
+    linear-gradient(180deg, rgba(255, 45, 149, 0.18), rgba(8, 4, 22, 0.7));
+  box-shadow: 0 0 32px rgba(255, 45, 149, 0.22);
+}
+
+.card.open:focus-visible {
+  outline: 2px solid var(--cyan);
+}
+
+.card.locked {
+  opacity: 0.55;
+  filter: grayscale(0.35);
+}
+
+.card-name {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+}
+
+.card-meta {
+  margin: 0;
+  font-family: Fraunces, serif;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.card.open .card-meta {
+  color: var(--gold);
+}
+
+.progress-label {
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 0.74rem;
+  color: var(--cyan);
+  margin: 0 0 8px;
+}
+
+.back {
+  margin-top: 18px;
 }
 
 @keyframes drift {
@@ -235,8 +322,15 @@ button.ghost {
   }
 }
 
+@media (min-width: 800px) {
+  .categories {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 640px) {
-  .field {
+  .field,
+  .actions {
     flex-direction: column;
   }
 
@@ -248,7 +342,9 @@ button.ghost {
 @media (prefers-reduced-motion: reduce) {
   .aurora,
   button,
-  .greeting {
+  .greeting,
+  .auren,
+  .practice {
     animation: none;
   }
 }
