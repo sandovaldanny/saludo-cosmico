@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Saludo Cósmico</title>
+    <meta
+      name="description"
+      content="Escribe tu nombre y recibe un saludo con una frase de bienvenida aleatoria."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&family=Syne:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <canvas id="stars" aria-hidden="true"></canvas>
+    <div class="aurora" aria-hidden="true"></div>
+    <div class="noise" aria-hidden="true"></div>
+
+    <main class="stage">
+      <p class="kicker">Una entrada memorable</p>
+      <h1 class="title">Dilo. El universo responde.</h1>
+      <p class="lede">
+        Escribe tu nombre y recibe un saludo hecho para ti, con una frase de
+        bienvenida que no se repetirá igual.
+      </p>
+
+      <form id="greet-form" class="panel" autocomplete="off">
+        <label for="name">Tu nombre</label>
+        <div class="field">
+          <input
+            id="name"
+            name="name"
+            type="text"
+            maxlength="40"
+            placeholder="Ej. Daniela"
+            required
+            autofocus
+          />
+          <button type="submit">Saludar</button>
+        </div>
+        <p class="hint">Pulsa Enter o el botón. Cada saludo elige una frase nueva.</p>
+      </form>
+
+      <section id="greeting" class="greeting" hidden>
+        <p class="hello" id="hello"></p>
+        <p class="phrase" id="phrase"></p>
+        <div class="actions">
+          <button type="button" id="again">Otra frase</button>
+          <button type="button" id="reset" class="ghost">Cambiar nombre</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
